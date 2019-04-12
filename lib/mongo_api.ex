@@ -39,6 +39,11 @@ defmodule MongoApi do
 
 	def update(collection, query, document, :many) do
 		Mongo.update_many(:mongo, collection, query, %{"$set": document}, pool: DBConnection.Poolboy)
+	end
+
+	def count(collection, query) do
+		{:ok, result} = Mongo.count(:mongo, collection, query, pool: DBConnection.Poolboy)
+		result
 	end	
   end
   
