@@ -2,13 +2,13 @@ defmodule MongoApi do
 	use Application
 	require Logger
 	import Supervisor.Spec
-  
+
 	def start(_type, _args) do
 		db_url = Application.get_env(:mongoapi, :db_url)
 		children = [
 			worker(Mongo, [[name: :mongo, pool: DBConnection.Poolboy, url: db_url]])
-		] 
-		
+		]
+
 	  	Supervisor.start_link(children, strategy: :one_for_one)
 	end
 
@@ -44,6 +44,10 @@ defmodule MongoApi do
 	def count(collection, query) do
 		{:ok, result} = Mongo.count(:mongo, collection, query, pool: DBConnection.Poolboy)
 		result
-	end	
+	end
+
+	def remove(collection, query) do
+		{:ok, result} = Mongo.delete_many(:mongo, collection, query, pool: DBConnection.Poolboy)
+		result
+	end
   end
-  
